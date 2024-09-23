@@ -18,7 +18,7 @@ const sendChatController = {
     const { query } = request.payload
     const { chat_id: id } = request.params
 
-    const exists = await chatExists(request.dynamodb, id)
+    const exists = await chatExists(request.db, id)
 
     if (!exists) {
       return h.response().code(404)

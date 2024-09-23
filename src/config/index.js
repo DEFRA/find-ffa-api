@@ -66,17 +66,19 @@ const config = convict({
       env: 'LOG_FORMAT'
     }
   },
-  mongoUri: {
-    doc: 'URI for mongodb',
-    format: '*',
-    default: 'mongodb://127.0.0.1:27017/',
-    env: 'MONGO_URI'
-  },
-  mongoDatabase: {
-    doc: 'database for mongodb',
-    format: String,
-    default: 'cdp-node-backend-template',
-    env: 'MONGO_DATABASE'
+  mongo: {
+    uri: {
+      doc: 'URI for mongodb',
+      format: '*',
+      default: 'mongodb://127.0.0.1:27017/',
+      env: 'MONGO_URI'
+    },
+    database: {
+      doc: 'database for mongodb',
+      format: String,
+      default: 'find-ffa-api',
+      env: 'MONGO_DATABASE'
+    }
   },
   httpProxy: {
     doc: 'HTTP Proxy',

@@ -8,6 +8,7 @@ import { failAction } from '~/src/helpers/fail-action.js'
 import { secureContext } from '~/src/helpers/secure-context/index.js'
 import { pulse } from '~/src/helpers/pulse.js'
 import { dynamodb } from '~/src/helpers/dynamodb.js'
+import { mongoDb } from '~/src/helpers/mongodb.js'
 
 async function createServer() {
   const server = hapi.server({
@@ -38,7 +39,14 @@ async function createServer() {
     }
   })
 
-  await server.register([requestLogger, secureContext, pulse, router, dynamodb])
+  await server.register([
+    requestLogger,
+    secureContext,
+    pulse,
+    router,
+    mongoDb,
+    dynamodb
+  ])
 
   return server
 }

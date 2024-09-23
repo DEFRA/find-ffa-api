@@ -1,9 +1,9 @@
-import { getChatById } from '~/src/repos/chats.js'
+import { getConversation } from '~/src/repos/mongodb/conversations.js'
 
-async function chatExists(dynamodb, id) {
-  const chat = await getChatById(dynamodb, id)
+async function chatExists(db, id) {
+  const chat = await getConversation(db, id)
 
-  if (!chat || chat.length === 0) {
+  if (!chat) {
     return false
   }
 

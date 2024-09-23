@@ -7,8 +7,11 @@ import { config } from '~/src/config/index.js'
 import { createLogger } from '~/src/helpers/logging/logger.js'
 import { parseMessages } from '~/src/utils/langchain-utils.js'
 import { openai, embeddings } from '~/src/services/ai/clients/openai.js'
-import { addChatMessages, getChatById } from '~/src/repos/chats.js'
 import { buildQueryChain } from './chains/index.js'
+import {
+  getConversation,
+  updateConversation
+} from '~/src/repos/mongodb/conversations.js'
 
 const logger = createLogger()
 
@@ -55,7 +58,10 @@ const fetchAnswer = async (request, query, conversationId) => {
     timestamp: new Date().toISOString()
   })
 
-  const conversation = await getChatById(request.dynamodb, conversationId)
+  const { messages: conversation } = await getConversation(
+    request.db,
+    conversationId
+  )
 
   const chatHistory = parseMessages(conversation)
 
@@ -67,7 +73,7 @@ const fetchAnswer = async (request, query, conversationId) => {
     timestamp: new Date().toISOString()
   })
 
-  await addChatMessages(request.dynamodb, conversationId, messages)
+  await updateConversation(request.db, { id: conversationId, messages })
 
   return generated
 }
