@@ -1,6 +1,5 @@
 import Joi from 'joi'
 import { getConversation } from '~/src/repos/mongodb/conversations.js'
-import { getMessages } from '~/src/repos/mongodb/messages.js'
 
 const getChatController = {
   options: {
@@ -18,12 +17,9 @@ const getChatController = {
     if (!conversation) {
       return h.response().code(404)
     }
-
-    const messages = await getMessages(request.db, id)
-
     return h
       .response({
-        messages,
+        messages: conversation.messages,
         chat_id: id
       })
       .code(200)
