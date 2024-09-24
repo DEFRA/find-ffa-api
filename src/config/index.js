@@ -7,6 +7,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProduction = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'development'
 const isTest = process.env.NODE_ENV === 'test'
+
 const config = convict({
   env: {
     doc: 'The application environment.',
@@ -23,7 +24,7 @@ const config = convict({
   serviceName: {
     doc: 'Api Service Name',
     format: String,
-    default: 'find-ffa-api'
+    default: 'CDP Node.js Backend Template'
   },
   root: {
     doc: 'Project root',
@@ -65,17 +66,19 @@ const config = convict({
       env: 'LOG_FORMAT'
     }
   },
-  mongoUri: {
-    doc: 'URI for mongodb',
-    format: '*',
-    default: 'mongodb://127.0.0.1:27017/',
-    env: 'MONGO_URI'
-  },
-  mongoDatabase: {
-    doc: 'database for mongodb',
-    format: String,
-    default: 'find-ffa-api',
-    env: 'MONGO_DATABASE'
+  mongo: {
+    uri: {
+      doc: 'URI for mongodb',
+      format: '*',
+      default: 'mongodb://127.0.0.1:27017/',
+      env: 'MONGO_URI'
+    },
+    database: {
+      doc: 'database for mongodb',
+      format: String,
+      default: 'find-ffa-api',
+      env: 'MONGO_DATABASE'
+    }
   },
   httpProxy: {
     doc: 'HTTP Proxy',
@@ -102,6 +105,90 @@ const config = convict({
     format: Boolean,
     default: isProduction,
     env: 'ENABLE_METRICS'
+  },
+  openAi: {
+    instanceName: {
+      doc: 'Azure OpenAI Service instance name',
+      format: String,
+      env: 'AZURE_OPENAI_API_INSTANCE_NAME',
+      default: null
+    },
+    key: {
+      doc: 'Azure OpenAI Service key',
+      format: String,
+      env: 'AZURE_OPENAI_API_KEY',
+      default: null
+    },
+    generationModel: {
+      doc: 'Azure OpenAI Service model name',
+      format: String,
+      env: 'AZURE_OPENAI_API_MODEL_NAME',
+      default: null
+    },
+    embeddingModel: {
+      doc: 'Azure OpenAI Service embedding model name',
+      format: String,
+      env: 'AZURE_OPENAI_API_EMBEDDING_DEPLOYMENT_NAME',
+      default: null
+    },
+    apiVersion: {
+      doc: 'Azure OpenAI Service API version',
+      format: String,
+      default: '2024-02-01',
+      env: 'AZURE_OPENAI_API_VERSION'
+    }
+  },
+  aiSearch: {
+    endpoint: {
+      doc: 'Azure AI Search endpoint',
+      format: String,
+      env: 'AZURE_AI_SEARCH_ENDPOINT',
+      default: null
+    },
+    key: {
+      doc: 'Azure AI Search key',
+      format: String,
+      env: 'AZURE_AI_SEARCH_KEY',
+      default: null
+    },
+    index: {
+      doc: 'Azure AI Search index',
+      format: String,
+      env: 'AZURE_AI_SEARCH_INDEX_NAME',
+      default: null
+    },
+    summariesIndex: {
+      doc: 'Azure AI Search summaries index',
+      format: String,
+      env: 'AZURE_AI_SEARCH_SUMMARIES_INDEX_NAME',
+      default: null
+    },
+    cacheEnabled: {
+      doc: 'Enable caching of search results',
+      format: Boolean,
+      default: false,
+      env: 'AZURE_AI_SEARCH_CACHE_ENABLED'
+    },
+    cacheTarget: {
+      doc: 'Target for cache',
+      format: String,
+      env: 'AZURE_AI_SEARCH_CACHE_TARGET',
+      default: null
+    }
+  },
+  aws: {
+    region: {
+      doc: 'AWS region',
+      format: String,
+      env: 'AWS_REGION',
+      default: 'eu-west-2'
+    },
+    endpoint: {
+      doc: 'AWS endpoint',
+      format: String,
+      env: 'AWS_ENDPOINT',
+      default: null
+    }
   }
 })
 

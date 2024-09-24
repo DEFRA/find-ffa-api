@@ -1,10 +1,3 @@
-/**
- *
- * @param {import('mongo-locks').LockManager} locker
- * @param {string} resource
- * @param {import('pino').Logger|undefined} logger
- * @returns {Promise<*>}
- */
 async function acquireLock(locker, resource, logger) {
   const lock = await locker.lock(resource)
   if (!lock) {
@@ -16,12 +9,6 @@ async function acquireLock(locker, resource, logger) {
   return lock
 }
 
-/**
- *
- * @param {import('mongo-locks').LockManager} locker
- * @param {string} resource
- * @returns {Promise<*>}
- */
 async function requireLock(locker, resource) {
   const lock = await locker.lock(resource)
   if (!lock) {

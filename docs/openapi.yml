@@ -1,0 +1,135 @@
+openapi: '3.0.3'
+info:
+  title: FFA Query API
+  version: '1.0'
+paths:
+  /chat/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Array of messages in chat'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/components/schemas/ChatMessage'
+        '404':
+          description: 'Chat not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+              required:
+                - message
+      responses:
+        '200':
+          description: 'Message sent'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/BotResponse'
+        '400':
+          description: 'Invalid message'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /chat:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+              required:
+                - query
+      responses:
+        '201':
+          description: 'Chat created'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/BotResponse'
+        '400':
+          description: 'Invalid message'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+components:
+  schemas:
+    ChatMessage:
+      type: object
+      properties:
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        role:
+          type: string
+          enum:
+            - user
+            - bot
+    BotResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+        references:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              scheme:
+                type: string
+              url:
+                type: string
+                format: uri
+              summary:
+                type: string
+        chat_id:
+          type: string
+          format: uuid
