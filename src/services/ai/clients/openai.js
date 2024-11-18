@@ -28,7 +28,6 @@ const openai = new ChatOpenAI({
       throw new Error(`Failed to query Azure OpenAI: ${error}`)
     }
   },
-  verbose: true,
   configuration: {
     baseURL: proxyAgent()?.url
   }
