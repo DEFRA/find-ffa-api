@@ -1,9 +1,17 @@
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai'
-import { proxyAgent } from '~/src/helpers/proxy-agent.js'
-
+import { createLogger } from '~/src/helpers/logging/logger.js'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 import { config } from '~/src/config/index.js'
 
-const httpAgent = proxyAgent().agent
+const logger = createLogger()
+
+const proxyUrlConfig = config.get('httpsProxy') ?? config.get('httpProxy')
+let httpsProxyAgent
+if (proxyUrlConfig) {
+  const proxyUrl = new URL(proxyUrlConfig)
+  httpsProxyAgent = new HttpsProxyAgent(proxyUrl)
+  logger.info('Using proxy agent for OpenAI')
+}
 
 const embeddings = new OpenAIEmbeddings({
   azureOpenAIApiInstanceName: config.get('openAi.instanceName'),
@@ -16,7 +24,7 @@ const embeddings = new OpenAIEmbeddings({
     }
   },
   configuration: {
-    httpAgent
+    httpAgent: httpsProxyAgent
   }
 })
 
@@ -32,7 +40,7 @@ const openai = new ChatOpenAI({
   },
   verbose: true,
   configuration: {
-    httpAgent
+    httpAgent: httpsProxyAgent
   }
 })
 
