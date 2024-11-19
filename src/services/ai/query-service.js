@@ -65,6 +65,9 @@ const fetchAnswer = async (request, query, conversationId) => {
 
   const chatHistory = parseMessages(conversation)
 
+  logger.info(`OpenAI: ${JSON.stringify(openai)}`)
+  logger.info(`Embeddings: ${JSON.stringify(openai)}`)
+
   const { generated } = await infer(query, chatHistory, openai, embeddings)
 
   messages.push({
