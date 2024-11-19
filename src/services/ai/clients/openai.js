@@ -3,39 +3,37 @@ import { proxyAgent } from '~/src/helpers/proxy-agent.js'
 
 import { config } from '~/src/config/index.js'
 
-const embeddings = new OpenAIEmbeddings(
-  {
-    azureOpenAIApiInstanceName: config.get('openAi.instanceName'),
-    azureOpenAIApiKey: config.get('openAi.key'),
-    azureOpenAIApiDeploymentName: config.get('openAi.embeddingModel'),
-    azureOpenAIApiVersion: config.get('openAi.apiVersion'),
-    onFailedAttempt: (error) => {
-      if (error.retriesLeft) {
-        throw new Error(`Failed to get OpenAI embeddings: ${error}`)
-      }
+const httpAgent = proxyAgent().agent
+
+const embeddings = new OpenAIEmbeddings({
+  azureOpenAIApiInstanceName: config.get('openAi.instanceName'),
+  azureOpenAIApiKey: config.get('openAi.key'),
+  azureOpenAIApiDeploymentName: config.get('openAi.embeddingModel'),
+  azureOpenAIApiVersion: config.get('openAi.apiVersion'),
+  onFailedAttempt: (error) => {
+    if (error.retriesLeft) {
+      throw new Error(`Failed to get OpenAI embeddings: ${error}`)
     }
   },
-  {
-    baseURL: proxyAgent()?.url
+  configuration: {
+    httpAgent
   }
-)
+})
 
-const openai = new ChatOpenAI(
-  {
-    azureOpenAIApiInstanceName: config.get('openAi.instanceName'),
-    azureOpenAIApiKey: config.get('openAi.key'),
-    azureOpenAIApiDeploymentName: config.get('openAi.generationModel'),
-    azureOpenAIApiVersion: config.get('openAi.apiVersion'),
-    onFailedAttempt: (error) => {
-      if (error.retriesLeft) {
-        throw new Error(`Failed to query Azure OpenAI: ${error}`)
-      }
-    },
-    verbose: true
+const openai = new ChatOpenAI({
+  azureOpenAIApiInstanceName: config.get('openAi.instanceName'),
+  azureOpenAIApiKey: config.get('openAi.key'),
+  azureOpenAIApiDeploymentName: config.get('openAi.generationModel'),
+  azureOpenAIApiVersion: config.get('openAi.apiVersion'),
+  onFailedAttempt: (error) => {
+    if (error.retriesLeft) {
+      throw new Error(`Failed to query Azure OpenAI: ${error}`)
+    }
   },
-  {
-    baseURL: proxyAgent()?.url
+  verbose: true,
+  configuration: {
+    httpAgent
   }
-)
+})
 
 export { openai, embeddings }
