@@ -1,4 +1,5 @@
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai'
+import { proxyAgent } from '~/src/helpers/proxy-agent.js'
 
 import { config } from '~/src/config/index.js'
 
@@ -11,6 +12,9 @@ const embeddings = new OpenAIEmbeddings({
     if (error.retriesLeft) {
       throw new Error(`Failed to get OpenAI embeddings: ${error}`)
     }
+  },
+  configuration: {
+    baseURL: proxyAgent()?.url
   }
 })
 
@@ -24,7 +28,10 @@ const openai = new ChatOpenAI({
       throw new Error(`Failed to query Azure OpenAI: ${error}`)
     }
   },
-  verbose: true
+  verbose: true,
+  configuration: {
+    baseURL: proxyAgent()?.url
+  }
 })
 
 export { openai, embeddings }
