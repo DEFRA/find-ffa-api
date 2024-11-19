@@ -15,7 +15,7 @@ const embeddings = new OpenAIEmbeddings({
       throw new Error(`Failed to get OpenAI embeddings: ${error}`)
     }
   },
-  options: {
+  configuration: {
     httpAgent
   }
 })
@@ -31,7 +31,7 @@ const openai = new ChatOpenAI({
     }
   },
   verbose: true,
-  options: {
+  configuration: {
     httpAgent
   }
 })
